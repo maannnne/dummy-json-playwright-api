@@ -1,25 +1,13 @@
 import { expect } from '@playwright/test';
 import { test } from '../../src/fixtures/fixtures';
-import { GetProductDTO, GetAllProductsDTO } from '../../src/interfaces-and-dtos/getProduct.dto';
+import { ProductResponseDTO, ProductsListResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { faker } from '@faker-js/faker';
 
-// ------------ TEST DATA ------------
 /* for validating the most important keys that should be visible in the json
-   this is just random subset, this will depend on real requirements */
-const productKeysToValidate: (keyof GetProductDTO)[] = [
-    'id',
-    'title',
-    'description',
-    'category',
-    'price',
-    'discountPercentage',
-    'rating',
-    'stock',
-    'brand',
-    'sku',
-    'availabilityStatus',
-];
-const allProductsKeysToValidate: (keyof GetAllProductsDTO)[] = ['limit', 'products', 'skip', 'total'];
+this is just random subset, this will depend on real requirements */
+// ------------ TEST DATA ------------
+const productKeysToValidate: (keyof ProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
+const allProductsKeysToValidate: (keyof ProductsListResponseDTO)[] = ['limit', 'products', 'skip', 'total'];
 const randomKeyFromKeysTovalidate =
     productKeysToValidate[faker.number.int({ min: 0, max: productKeysToValidate.length - 1 })];
 
@@ -34,28 +22,25 @@ test.describe('Get all products tests', () => {
         baseValidator,
     }) => {
         // Get all products
-        const productResponse = await productsApi.getAllProducts();
+        const res = await productsApi.getAllProducts();
 
         // Check the status code - should be 200OK
-        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
-
-        // Get the response json
-        const responseJson = await productResponse.json();
+        await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
         // Check that the response contains all neccessary keys
-        await baseValidator.validateResponseKeys(responseJson, allProductsKeysToValidate);
+        await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate the products is not an empty array
-        expect(responseJson.products.length).toBeGreaterThanOrEqual(1);
+        expect(res.responseJson.products.length).toBeGreaterThanOrEqual(1);
 
         // Validate the first product, check that response contains the all important keys (random subset of keys, but should be based on requirements)
-        await baseValidator.validateResponseKeys(responseJson.products[0], productKeysToValidate);
+        await baseValidator.validateResponseKeys(res.responseJson.products[0], productKeysToValidate);
 
         // Validate that skip is 0, since it was not specified
-        await baseValidator.validateKeyValuePair(responseJson, 'skip', 0);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'skip', 0);
 
         // Verify the limit is 30 by default, since it was not specified
-        await baseValidator.validateKeyValuePair(responseJson, 'limit', 30);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'limit', 30);
     });
 
     test('Get all products, set the limit to 0 and get all products displayed', async ({
@@ -63,20 +48,18 @@ test.describe('Get all products tests', () => {
         baseValidator,
     }) => {
         // Get all products
-        const productResponse = await productsApi.getAllProducts({ limit: limitForAllProducts });
+        const res = await productsApi.getAllProducts({ limit: limitForAllProducts });
 
         // Check the status code - should be 200OK
-        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
+        await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
-        // Get the response json
-        const responseJson = await productResponse.json();
 
         // Check that the response contains all neccessary keys
-        await baseValidator.validateResponseKeys(responseJson, allProductsKeysToValidate);
+        await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate that the limit is the same as total number of products and are not 0 (because we dont know exact number of all products, just making sure its not 0)
-        expect(responseJson.total).toBe(responseJson.limit);
-        expect(responseJson.total).toBeGreaterThan(0);
+        expect(res.responseJson.total).toBe(res.responseJson.limit);
+        expect(res.responseJson.total).toBeGreaterThan(0);
     });
 
     test(`Get all products, set a random limit and get correct amount products displayed`, async ({
@@ -84,39 +67,34 @@ test.describe('Get all products tests', () => {
         baseValidator,
     }) => {
         // Get all products
-        const productResponse = await productsApi.getAllProducts({ limit: randomLimit });
+        const res = await productsApi.getAllProducts({ limit: randomLimit });
 
         // Check the status code - should be 200OK
-        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
+        await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
-        // Get the response json
-        const responseJson = await productResponse.json();
 
         // Check that the response contains all neccessary keys
-        await baseValidator.validateResponseKeys(responseJson, allProductsKeysToValidate);
+        await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate the limit, should be exactly as the specified number
-        await baseValidator.validateKeyValuePair(responseJson, 'limit', randomLimit);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'limit', randomLimit);
 
         // Additional check, make sure the response products contain the correct amount of products
-        expect(responseJson.products.length).toBe(randomLimit);
+        expect(res.responseJson.products.length).toBe(randomLimit);
     });
 
     test('Get all products, but skip the first random count of products', async ({ productsApi, baseValidator }) => {
         // Get all products
-        const productResponse = await productsApi.getAllProducts({ skip: randomSkip });
+        const res = await productsApi.getAllProducts({ skip: randomSkip });
 
         // Check the status code - should be 200OK
-        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
-
-        // Get the response json
-        const responseJson = await productResponse.json();
+        await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
         // Check that the response contains all neccessary keys
-        await baseValidator.validateResponseKeys(responseJson, allProductsKeysToValidate);
+        await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate the skip, should be exactly as the specified number
-        await baseValidator.validateKeyValuePair(responseJson, 'skip', randomSkip);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'skip', randomSkip);
 
         /* Since the products are displayed via their id, we can check that the products started with id randomSkip + 1,
     but it's a risky check without clear requirements, so I did not include it */
@@ -127,18 +105,16 @@ test.describe('Get all products tests', () => {
         baseValidator,
     }) => {
         // Get all products
-        const productResponse = await productsApi.getAllProducts({ select: randomSelect });
+        const res = await productsApi.getAllProducts({ select: randomSelect });
 
         // Check the status code - should be 200OK
-        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
+        await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
-        // Get the response json
-        const responseJson = await productResponse.json();
 
         // Check that the response contains all neccessary keys
-        await baseValidator.validateResponseKeys(responseJson, allProductsKeysToValidate);
+        await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate the first element of the products array - should have only the specified key displayed + id
-        await baseValidator.validateResponseKeys(responseJson.products[0], ['id', randomSelect]);
+        await baseValidator.validateResponseKeys(res.responseJson.products[0], ['id', randomSelect]);
     });
 });

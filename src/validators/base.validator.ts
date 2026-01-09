@@ -1,4 +1,5 @@
-import { APIResponse, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import { ApiResponse } from '../interfaces-and-dtos/apiResponse.interface';
 
 export class BaseValidator {
     /**
@@ -8,48 +9,64 @@ export class BaseValidator {
      * @param optionalValidationMessage - optional message to inlcude in the expect
      */
     async validateStatusCode(
-        response: APIResponse,
+        response: ApiResponse<any>,
         expectedStatusCode: number,
         optionalValidationMessage?: string,
     ): Promise<void> {
-        expect(response.status(), optionalValidationMessage).toBe(expectedStatusCode);
+        expect(response.status, optionalValidationMessage).toBe(expectedStatusCode);
     }
 
     /**
      * Validates that a subset of keys is present in teh response json
-     * @param responseJson - response to do validation on
+     * @param resJson - response to do validation on
      * @param keysToValidate - subset of keys to look for in the json
      */
-    async validateResponseKeys(responseJson: object, keysToValidate: any[]): Promise<void> {
+    async validateResponseKeys(resJson: object, keysToValidate: any[]): Promise<void> {
         keysToValidate.forEach(key => {
-            expect(responseJson, `Response should contain key: ${key}`).toHaveProperty(key);
+            expect(resJson, `Response should contain key: ${key}`).toHaveProperty(key);
         });
     }
 
     /**
      * Validates that a subset of keys is not present in teh response json
-     * @param responseJson - response to do validation on
+     * @param resJson - response to do validation on
      * @param keysToValidate - subset of keys to look for in the json
      */
-    async validateResponseDoesntHaveKeys(responseJson: object, keysToValidate: any[]): Promise<void> {
+    async validateResponseDoesntHaveKeys(resJson: object, keysToValidate: any[]): Promise<void> {
         keysToValidate.forEach(key => {
-            expect(responseJson, `Response should contain key: ${key}`).not.toHaveProperty(key);
+            expect(resJson, `Response should contain key: ${key}`).not.toHaveProperty(key);
         });
     }
 
     /**
-     * Validates teh key value pair
-     * @param responseJson - response to do validation on
+     * Validates the key value pair
+     * @param resJson - response to do validation on
      * @param expectedKey - expected key to valdiate
      * @param expectedValue - expected value of the specified key
      * @param optionalValidationMessage - optional message to inlcude in the expect
      */
     async validateKeyValuePair(
-        responseJson: object,
+        resJson: object,
         expectedKey: string,
         expectedValue: any,
         optionalValidationMessage?: string,
     ): Promise<void> {
-        expect(responseJson, optionalValidationMessage).toHaveProperty(expectedKey, expectedValue);
+        expect(resJson, optionalValidationMessage).toHaveProperty(expectedKey, expectedValue);
+    }
+
+    /**
+     * Validates all similar key-value pairs in an array of similar objects
+     * @param objectsArray - an array of similar objects
+     * @param expectedKey - expected key to valdiate
+     * @param expectedValue - expected value of the specified key
+     * @param optionalValidationMessage - optional message to inlcude in the expect
+     */
+    async validateKeyValuePairsInObjectsArray(
+        objectsArray: object[],
+        expectedKey: string,
+        expectedValue: any,
+        optionalValidationMessage?: string,
+    ): Promise<void> {
+        objectsArray.forEach(obj => expect(obj[expectedKey], optionalValidationMessage).toContain(expectedValue));
     }
 }

@@ -1,5 +1,5 @@
 import { test } from '../../src/fixtures/fixtures';
-import { GetProductDTO } from '../../src/interfaces-and-dtos/getProduct.dto';
+import { ProductResponseDTO, ErrorResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { APIValidationMessages as msgs } from '../../src/test-data/validationMessages';
 import { faker } from '@faker-js/faker';
 
@@ -10,34 +10,22 @@ const invalidProductId = faker.number.int({ min: -1000, max: -1 }); // in range 
 
 /* for validating the most important keys that should be visible in the json
    this is just random subset, this will depend on real requirements */
-const keysToValidate: (keyof GetProductDTO)[] = [
-    'id',
-    'title',
-    'description',
-    'category',
-    'price',
-    'discountPercentage',
-    'rating',
-    'stock',
-    'brand',
-    'sku',
-    'availabilityStatus',
-];
+const keysToValidate: (keyof ProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
 
 test.describe('Get product by id tests', () => {
     test('Get product by existing ID, check subset of keys and product id', async ({ productsApi, baseValidator }) => {
         // Get the product by id
-        const productResponse = await productsApi.getProductById(existingProductId);
+        const res = await productsApi.getProductById(existingProductId);
 
         // Check the status code - should be 200OK
-        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
+        await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
         // Check that response contains all important keys (random subset of keys, but should be based on requirements)
-        await baseValidator.validateResponseKeys(productResponse, keysToValidate);
+        await baseValidator.validateResponseKeys(res.responseJson, keysToValidate);
 
         // Validate product id is the same as specified in path param
         await baseValidator.validateKeyValuePair(
-            productResponse,
+            res.responseJson,
             'id',
             existingProductId,
             'Product id should be the same one specified in the path param',
@@ -49,15 +37,14 @@ test.describe('Get product by id tests', () => {
         baseValidator,
     }) => {
         // Get the product by id
-        const productResponse = await productsApi.getProductById(nonexistingProductId);
-        const responseJson = await productResponse.json();
+        const res = await productsApi.getProductById(nonexistingProductId);
 
         // Validate that the status code is 404
-        await baseValidator.validateStatusCode(productResponse, 404, 'Status code should be 404');
+        await baseValidator.validateStatusCode(res, 404, 'Status code should be 404');
 
         // Validate the error message in the response body
         await baseValidator.validateKeyValuePair(
-            responseJson,
+            res.responseJson,
             'message',
             msgs.productNotFoundMsg(nonexistingProductId),
             'Product should not be found',
@@ -69,15 +56,14 @@ test.describe('Get product by id tests', () => {
         baseValidator,
     }) => {
         // Get the product by id
-        const productResponse = await productsApi.getProductById(invalidProductId);
-        const responseJson = await productResponse.json();
+        const res = await productsApi.getProductById(invalidProductId);
 
         // Validate that the status code is 404
-        await baseValidator.validateStatusCode(productResponse, 404);
+        await baseValidator.validateStatusCode(res, 404);
 
         // Validate the error message in the response body
         await baseValidator.validateKeyValuePair(
-            responseJson,
+            res.responseJson,
             'message',
             msgs.productNotFoundMsg(invalidProductId),
             'Product should not be found',
