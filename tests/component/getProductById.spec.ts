@@ -1,5 +1,3 @@
-import { IProductData, IProductsQueryParams } from '../../src/interfaces-and-dtos/product.interface';
-import { APIRequestContext, expect } from '@playwright/test';
 import { test } from '../../src/fixtures/fixtures';
 import { GetProductDTO } from '../../src/interfaces-and-dtos/getProduct.dto';
 import { APIValidationMessages as msgs } from '../../src/test-data/validationMessages';
@@ -26,61 +24,63 @@ const keysToValidate: (keyof GetProductDTO)[] = [
     'availabilityStatus',
 ];
 
-test('Get product by existing ID, check subset of keys and product id', async ({ productsApi, baseValidator }) => {
-    // Get the product by id
-    const productResponse = await productsApi.getProductById(existingProductId);
+test.describe('Get product by id tests', () => {
+    test('Get product by existing ID, check subset of keys and product id', async ({ productsApi, baseValidator }) => {
+        // Get the product by id
+        const productResponse = await productsApi.getProductById(existingProductId);
 
-    // Check the status code - should be 200OK
-    await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
+        // Check the status code - should be 200OK
+        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
 
-    // Check that response contains all important keys (random subset of keys, but should be based on requirements)
-    await baseValidator.validateResponseKeys(productResponse, keysToValidate);
+        // Check that response contains all important keys (random subset of keys, but should be based on requirements)
+        await baseValidator.validateResponseKeys(productResponse, keysToValidate);
 
-    // Validate product id is the same as specified in path param
-    await baseValidator.validateKeyValue(
-        productResponse,
-        'id',
-        existingProductId,
-        'Product id should be the same one specified in the path param',
-    );
-});
+        // Validate product id is the same as specified in path param
+        await baseValidator.validateKeyValuePair(
+            productResponse,
+            'id',
+            existingProductId,
+            'Product id should be the same one specified in the path param',
+        );
+    });
 
-test('Negative case - get product by non-existing ID, check status code and message', async ({
-    productsApi,
-    baseValidator,
-}) => {
-    // Get the product by id
-    const productResponse = await productsApi.getProductById(nonexistingProductId);
-    const responseJson = await productResponse.json();
+    test('Negative case - get product by non-existing ID, check status code and message', async ({
+        productsApi,
+        baseValidator,
+    }) => {
+        // Get the product by id
+        const productResponse = await productsApi.getProductById(nonexistingProductId);
+        const responseJson = await productResponse.json();
 
-    // Validate that the status code is 404
-    await baseValidator.validateStatusCode(productResponse, 404, 'Status code should be 404');
+        // Validate that the status code is 404
+        await baseValidator.validateStatusCode(productResponse, 404, 'Status code should be 404');
 
-    // Validate the error message in the response body
-    await baseValidator.validateKeyValue(
-        responseJson,
-        'message',
-        msgs.productNotFoundMsg(nonexistingProductId),
-        'Product should not be found',
-    );
-});
+        // Validate the error message in the response body
+        await baseValidator.validateKeyValuePair(
+            responseJson,
+            'message',
+            msgs.productNotFoundMsg(nonexistingProductId),
+            'Product should not be found',
+        );
+    });
 
-test('Negative case - get product by invalid ID, check status code and message', async ({
-    productsApi,
-    baseValidator,
-}) => {
-    // Get the product by id
-    const productResponse = await productsApi.getProductById(invalidProductId);
-    const responseJson = await productResponse.json();
+    test('Negative case - get product by invalid ID, check status code and message', async ({
+        productsApi,
+        baseValidator,
+    }) => {
+        // Get the product by id
+        const productResponse = await productsApi.getProductById(invalidProductId);
+        const responseJson = await productResponse.json();
 
-    // Validate that the status code is 404
-    await baseValidator.validateStatusCode(productResponse, 404);
+        // Validate that the status code is 404
+        await baseValidator.validateStatusCode(productResponse, 404);
 
-    // Validate the error message in the response body
-    await baseValidator.validateKeyValue(
-        responseJson,
-        'message',
-        msgs.productNotFoundMsg(invalidProductId),
-        'Product should not be found',
-    );
+        // Validate the error message in the response body
+        await baseValidator.validateKeyValuePair(
+            responseJson,
+            'message',
+            msgs.productNotFoundMsg(invalidProductId),
+            'Product should not be found',
+        );
+    });
 });

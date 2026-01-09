@@ -1,8 +1,6 @@
-import { IProductData, IProductsQueryParams } from '../../src/interfaces-and-dtos/product.interface';
-import { APIRequestContext, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { test } from '../../src/fixtures/fixtures';
 import { GetProductDTO, GetAllProductsDTO } from '../../src/interfaces-and-dtos/getProduct.dto';
-import { APIValidationMessages as msgs } from '../../src/test-data/validationMessages';
 import { faker } from '@faker-js/faker';
 
 // ------------ TEST DATA ------------
@@ -54,10 +52,10 @@ test.describe('Get all products tests', () => {
         await baseValidator.validateResponseKeys(responseJson.products[0], productKeysToValidate);
 
         // Validate that skip is 0, since it was not specified
-        await baseValidator.validateKeyValue(responseJson, 'skip', 0);
+        await baseValidator.validateKeyValuePair(responseJson, 'skip', 0);
 
         // Verify the limit is 30 by default, since it was not specified
-        await baseValidator.validateKeyValue(responseJson, 'limit', 30);
+        await baseValidator.validateKeyValuePair(responseJson, 'limit', 30);
     });
 
     test('Get all products, set the limit to 0 and get all products displayed', async ({
@@ -98,7 +96,7 @@ test.describe('Get all products tests', () => {
         await baseValidator.validateResponseKeys(responseJson, allProductsKeysToValidate);
 
         // Validate the limit, should be exactly as the specified number
-        await baseValidator.validateKeyValue(responseJson, 'limit', randomLimit);
+        await baseValidator.validateKeyValuePair(responseJson, 'limit', randomLimit);
 
         // Additional check, make sure the response products contain the correct amount of products
         expect(responseJson.products.length).toBe(randomLimit);
@@ -118,7 +116,7 @@ test.describe('Get all products tests', () => {
         await baseValidator.validateResponseKeys(responseJson, allProductsKeysToValidate);
 
         // Validate the skip, should be exactly as the specified number
-        await baseValidator.validateKeyValue(responseJson, 'skip', randomSkip);
+        await baseValidator.validateKeyValuePair(responseJson, 'skip', randomSkip);
 
         /* Since the products are displayed via their id, we can check that the products started with id randomSkip + 1,
     but it's a risky check without clear requirements, so I did not include it */
