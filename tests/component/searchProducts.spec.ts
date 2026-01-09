@@ -1,5 +1,5 @@
 import { test } from '../../src/fixtures/fixtures';
-import { GetProductDTO, GetAllProductsDTO } from '../../src/interfaces-and-dtos/products.dto';
+import { ProductResponseDTO, ProductsListResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { base, faker } from '@faker-js/faker';
 import { expect } from '@playwright/test';
 
@@ -10,20 +10,8 @@ const nonExistingQueryForSearch = faker.string.alphanumeric({ length: 8 });
 
 /* for validating the most important keys that should be visible in the json
    this is just random subset, this will depend on real requirements */
-const keysToValidate: (keyof GetProductDTO)[] = [
-    'id',
-    'title',
-    'description',
-    'category',
-    'price',
-    'discountPercentage',
-    'rating',
-    'stock',
-    'brand',
-    'sku',
-    'availabilityStatus',
-];
-const allProductsKeysToValidate: (keyof GetAllProductsDTO)[] = ['limit', 'products', 'skip', 'total'];
+const keysToValidate: (keyof ProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
+const allProductsKeysToValidate: (keyof ProductsListResponseDTO)[] = ['limit', 'products', 'skip', 'total'];
 
 test.describe('Search products with query tests', () => {
     test('Search products with existing query, validate product details and the search word', async ({
@@ -31,14 +19,12 @@ test.describe('Search products with query tests', () => {
         baseValidator,
     }) => {
         // Get the product by id
-        const productResponse = await productsApi.searchProduct(randomQuery);
+        const res = await productsApi.searchProduct(randomQuery);
 
         // Check the status code - should be 200OK
-        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
+        await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
-        // Get the response json and product 0 details
-        const responseJson = (await productResponse.json()) as GetAllProductsDTO;
-        const p0Details = responseJson.products[0];
+        const p0Details = res.responseJson.products[0];
 
         // Check that first product contains all important keys (random subset of keys, but should be based on requirements)
         await baseValidator.validateResponseKeys(p0Details, keysToValidate);
@@ -52,25 +38,20 @@ test.describe('Search products with query tests', () => {
         baseValidator,
     }) => {
         // Get the product by id
-        const productResponse = await productsApi.searchProduct(nonExistingQueryForSearch);
+        const res = await productsApi.searchProduct(nonExistingQueryForSearch);
 
         // Check the status code - should be 200OK
-        await baseValidator.validateStatusCode(productResponse, 200, 'Status code should be 200');
-
-        // Get the response json and product 0 details
-        // TODO: add this everywhere
-        const responseJson = (await productResponse.json()) as GetAllProductsDTO;
-        console.log(responseJson);
+        await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
         // Validate the response
-        await baseValidator.validateResponseKeys(responseJson, allProductsKeysToValidate);
+        await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Check that the total, skip and limit are 0
-        await baseValidator.validateKeyValuePair(responseJson, 'total', 0);
-        await baseValidator.validateKeyValuePair(responseJson, 'skip', 0);
-        await baseValidator.validateKeyValuePair(responseJson, 'limit', 0);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'total', 0);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'skip', 0);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'limit', 0);
 
         // Check that the products array is empty
-        await baseValidator.validateKeyValuePair(responseJson, 'products', []);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'products', []);
     });
 });
