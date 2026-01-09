@@ -1,6 +1,6 @@
 import { APIRequestContext, APIResponse } from '@playwright/test';
-import { IProductsQueryParams, IProductData } from '../interfaces-and-dtos/product.interface';
-import { GetProductDTO } from '../interfaces-and-dtos/getProduct.dto';
+import { IProductsQueryParams, IProductData } from '../interfaces-and-dtos/products.interface';
+import { GetProductDTO } from '../interfaces-and-dtos/products.dto';
 
 export const productEndpoints = {
     products: '/products',

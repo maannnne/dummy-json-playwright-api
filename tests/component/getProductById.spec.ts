@@ -1,5 +1,5 @@
 import { test } from '../../src/fixtures/fixtures';
-import { GetProductDTO } from '../../src/interfaces-and-dtos/getProduct.dto';
+import { GetProductDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { APIValidationMessages as msgs } from '../../src/test-data/validationMessages';
 import { faker } from '@faker-js/faker';
 

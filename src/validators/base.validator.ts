@@ -38,7 +38,7 @@ export class BaseValidator {
     }
 
     /**
-     * Validates teh key value pair
+     * Validates the key value pair
      * @param responseJson - response to do validation on
      * @param expectedKey - expected key to valdiate
      * @param expectedValue - expected value of the specified key
@@ -51,5 +51,21 @@ export class BaseValidator {
         optionalValidationMessage?: string,
     ): Promise<void> {
         expect(responseJson, optionalValidationMessage).toHaveProperty(expectedKey, expectedValue);
+    }
+
+    /**
+     * Validates all similar key-value pairs in an array of similar objects
+     * @param objectsArray - an array of similar objects
+     * @param expectedKey - expected key to valdiate
+     * @param expectedValue - expected value of the specified key
+     * @param optionalValidationMessage - optional message to inlcude in the expect
+     */
+    async validateKeyValuePairsInObjectsArray(
+        objectsArray: object[],
+        expectedKey: string,
+        expectedValue: any,
+        optionalValidationMessage?: string,
+    ): Promise<void> {
+        objectsArray.forEach(obj => expect(obj[expectedKey], optionalValidationMessage).toContain(expectedValue));
     }
 }

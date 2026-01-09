@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../../src/fixtures/fixtures';
-import { GetProductDTO, GetAllProductsDTO } from '../../src/interfaces-and-dtos/getProduct.dto';
+import { GetProductDTO, GetAllProductsDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { faker } from '@faker-js/faker';
 
 // ------------ TEST DATA ------------

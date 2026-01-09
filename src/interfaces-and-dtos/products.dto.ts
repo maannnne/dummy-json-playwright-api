@@ -30,7 +30,7 @@ export type GetProductDTO = {
     discountPercentage: number;
     rating: number;
     stock: number;
-    tags: String[];
+    tags: string[];
     brand: string;
     sku: string;
     weight: number;
@@ -42,7 +42,7 @@ export type GetProductDTO = {
     returnPolicy: string;
     minimumOrderQuantity: number;
     meta: ProductMetaDTO;
-    images: String[];
+    images: string[];
     thumbnail: string;
 };
 
