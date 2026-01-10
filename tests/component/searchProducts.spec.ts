@@ -1,6 +1,6 @@
 import { test } from '../../src/fixtures/fixtures';
-import { ProductResponseDTO, ProductsListResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
-import { base, faker } from '@faker-js/faker';
+import { GetProductResponseDTO, ProductsListResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
+import { faker } from '@faker-js/faker';
 import { expect } from '@playwright/test';
 
 // ------------ TEST DATA ------------
@@ -10,7 +10,7 @@ const nonExistingQueryForSearch = faker.string.alphanumeric({ length: 8 });
 
 /* for validating the most important keys that should be visible in the json
    this is just random subset, this will depend on real requirements */
-const keysToValidate: (keyof ProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
+const keysToValidate: (keyof GetProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
 const allProductsKeysToValidate: (keyof ProductsListResponseDTO)[] = ['limit', 'products', 'skip', 'total'];
 
 test.describe('Search products with query tests', () => {
@@ -18,7 +18,7 @@ test.describe('Search products with query tests', () => {
         productsApi,
         baseValidator,
     }) => {
-        // Get the product by id
+        // Search product with random query
         const res = await productsApi.searchProduct(randomQuery);
 
         // Check the status code - should be 200OK
@@ -33,11 +33,11 @@ test.describe('Search products with query tests', () => {
         expect(`${p0Details.title} ${p0Details.description}`.toLowerCase()).toContain(randomQuery);
     });
 
-    test('Search products with non-existing query, validate the returned response', async ({
+    test('Negative - Search products with non-existing query, validate the returned response', async ({
         productsApi,
         baseValidator,
     }) => {
-        // Get the product by id
+        // Search product with random query
         const res = await productsApi.searchProduct(nonExistingQueryForSearch);
 
         // Check the status code - should be 200OK

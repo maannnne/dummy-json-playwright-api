@@ -7,7 +7,7 @@ const randomExistingCategory = faker.helpers.arrayElement(allProductCategories);
 
 test.describe('Get product category list tests', () => {
     test('Get product category list', async ({ baseValidator, productsApi }) => {
-        // Get all product categories
+        // Get product category list
         const response = await productsApi.getProductsCategoryList();
 
         // Validate the status code - should be 200 OK

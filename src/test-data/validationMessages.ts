@@ -1,3 +1,3 @@
-export const APIValidationMessages = {
+export const apiValidationMessages = {
     productNotFoundMsg: (productId: number) => `Product with id '${productId}' not found`,
 };
