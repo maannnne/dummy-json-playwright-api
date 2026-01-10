@@ -1,5 +1,5 @@
 import { test } from '../../src/fixtures/fixtures';
-import { ProductBuilder } from '../../src/builders/addProduct.builder';
+import { ProductBuilder } from '../../src/utils/addProduct.builder';
 import { GetProductResponseDTO, CreateProductDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { faker } from '@faker-js/faker';
 
@@ -45,12 +45,17 @@ test.describe('Products CRUD integration test', () => {
         await baseValidator.validateStatusCode(fetchedRes, 200, 'Status code should be 200');
 
         // Check the product id is correct in the response
-        await baseValidator.validateKeyValuePair(fetchedRes.responseJson, 'id', productId);
+        await baseValidator.validateKeyValuePair(
+            fetchedRes.responseJson,
+            'id',
+            productId,
+            'Product id should be the same as from the creation response',
+        );
 
         // Check that the field we created product title is correct
         /*
             This will fail, since creation is just a simulation. So, commenting this step out...
-            await baseValidator.validateKeyValuePair(fetchedRes.responseJson, 'title', createdProduct.title);
+            await baseValidator.validateKeyValuePair(fetchedRes.responseJson, 'title', createdProduct.title, 'Product title should be correct');
         */
 
         // ------- UPDATE THE PRODUCT --------
@@ -61,10 +66,20 @@ test.describe('Products CRUD integration test', () => {
         await baseValidator.validateStatusCode(updatedRes, 200, 'Status code should be 200');
 
         // Check the product id is correct in the response
-        await baseValidator.validateKeyValuePair(updatedRes.responseJson, 'id', productId);
+        await baseValidator.validateKeyValuePair(
+            updatedRes.responseJson,
+            'id',
+            productId,
+            'Product id should be the same as from the creation response',
+        );
 
         // Check that the field we updated is correctly updated in the response
-        await baseValidator.validateKeyValuePair(updatedRes.responseJson, 'title', partiallyUpdatedProduct.title);
+        await baseValidator.validateKeyValuePair(
+            updatedRes.responseJson,
+            'title',
+            partiallyUpdatedProduct.title,
+            'Product title should be correct',
+        );
 
         // ------- GET THE PRODUCT --------
         const fetchedAfterUpdateRes = await productsApi.getProductById(productId);
@@ -73,12 +88,17 @@ test.describe('Products CRUD integration test', () => {
         await baseValidator.validateStatusCode(fetchedAfterUpdateRes, 200, 'Status code should be 200');
 
         // Check the product id is correct in the response
-        await baseValidator.validateKeyValuePair(fetchedAfterUpdateRes.responseJson, 'id', productId);
+        await baseValidator.validateKeyValuePair(
+            fetchedAfterUpdateRes.responseJson,
+            'id',
+            productId,
+            'Product id should be the same as from the creation response',
+        );
 
         // Check that the field we created product title is correct
         /*
             This will fail, since updating product is just a simulation. So, commenting this step out...
-            await baseValidator.validateKeyValuePair(fetchedAfterUpdateRes.responseJson, 'title', createdProduct.title);
+            await baseValidator.validateKeyValuePair(fetchedAfterUpdateRes.responseJson, 'title', createdProduct.title, Product title should be correct);
         */
 
         // ------- DELETE THE PRODUCT --------
@@ -88,9 +108,14 @@ test.describe('Products CRUD integration test', () => {
         await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
         // Check the id is correct
-        await baseValidator.validateKeyValuePair(res.responseJson, 'id', productId);
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'id',
+            productId,
+            'Product id should be the same as from the creation response',
+        );
 
         // Check that isDeleted is true
-        await baseValidator.validateKeyValuePair(res.responseJson, 'isDeleted', true);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'isDeleted', true, 'isDeleted should be true');
     });
 });

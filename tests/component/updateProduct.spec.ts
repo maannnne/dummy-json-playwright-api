@@ -1,5 +1,5 @@
 import { test } from '../../src/fixtures/fixtures';
-import { ProductBuilder } from '../../src/builders/addProduct.builder';
+import { ProductBuilder } from '../../src/utils/addProduct.builder';
 import { GetProductResponseDTO, CreateProductDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { allProductCategories } from '../../src/test-data/productCategories';
 import { faker } from '@faker-js/faker';
@@ -36,11 +36,36 @@ test.describe('Update product tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, keysToValidate1);
 
         // Check the value of each key we set to make sure it's the same as provided
-        await baseValidator.validateKeyValuePair(res.responseJson, 'id', existingProductId1);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'title', updatedProduct.title);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'brand', updatedProduct.brand);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'price', updatedProduct.price);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'category', updatedProduct.category);
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'id',
+            existingProductId1,
+            'Updated product id should be correct',
+        );
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'title',
+            updatedProduct.title,
+            'Updated product title should be correct',
+        );
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'brand',
+            updatedProduct.brand,
+            'Updated product brand should be correct',
+        );
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'price',
+            updatedProduct.price,
+            'Updated product price should be correct',
+        );
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'category',
+            updatedProduct.category,
+            'Updated product category should be correct',
+        );
     });
 
     test('Update product partial and validate the response', async ({ productsApi, baseValidator }) => {
@@ -54,8 +79,18 @@ test.describe('Update product tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, keysToValidate2);
 
         // Check the value of each key we set to make sure it's the same as provided
-        await baseValidator.validateKeyValuePair(res.responseJson, 'id', existingProductId2);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'title', partiallyUpdatedProduct.title);
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'id',
+            existingProductId2,
+            'Updated product id should be correct',
+        );
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'title',
+            partiallyUpdatedProduct.title,
+            'Updated product title should be correct',
+        );
     });
 
     /* IMPORTANT NOTES */

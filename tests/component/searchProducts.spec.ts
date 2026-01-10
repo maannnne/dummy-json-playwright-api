@@ -30,7 +30,10 @@ test.describe('Search products with query tests', () => {
         await baseValidator.validateResponseKeys(p0Details, keysToValidate);
 
         // Validate the values of title and description keys of the 1st product, because that is where the search word is looked for
-        expect(`${p0Details.title} ${p0Details.description}`.toLowerCase()).toContain(randomQuery);
+        expect(
+            `${p0Details.title} ${p0Details.description}`.toLowerCase(),
+            'Response description should contain the query word',
+        ).toContain(randomQuery);
     });
 
     test('Negative - Search products with non-existing query, validate the returned response', async ({
@@ -47,11 +50,11 @@ test.describe('Search products with query tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Check that the total, skip and limit are 0
-        await baseValidator.validateKeyValuePair(res.responseJson, 'total', 0);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'skip', 0);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'limit', 0);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'total', 0, 'Response total should be 0');
+        await baseValidator.validateKeyValuePair(res.responseJson, 'skip', 0, 'Response skip should be 0');
+        await baseValidator.validateKeyValuePair(res.responseJson, 'limit', 0, 'Response limit should be 0');
 
         // Check that the products array is empty
-        await baseValidator.validateKeyValuePair(res.responseJson, 'products', []);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'products', [], 'Products array should be empty');
     });
 });

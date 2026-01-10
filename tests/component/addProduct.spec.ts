@@ -1,5 +1,5 @@
 import { test } from '../../src/fixtures/fixtures';
-import { ProductBuilder } from '../../src/builders/addProduct.builder';
+import { ProductBuilder } from '../../src/utils/addProduct.builder';
 import { GetProductResponseDTO, CreateProductDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { allProductCategories } from '../../src/test-data/productCategories';
 import { faker } from '@faker-js/faker';
@@ -30,10 +30,30 @@ test.describe('Add product tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, keysToValidate);
 
         // Check the value of each key we set to make sure it's the same as provided
-        await baseValidator.validateKeyValuePair(res.responseJson, 'title', product1.title);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'brand', product1.brand);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'price', product1.price);
-        await baseValidator.validateKeyValuePair(res.responseJson, 'category', product1.category);
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'title',
+            product1.title,
+            'Product title should be as specified',
+        );
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'brand',
+            product1.brand,
+            'Product brand should be as specified',
+        );
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'price',
+            product1.price,
+            'Product price should be as specified',
+        );
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'category',
+            product1.category,
+            'Product category should be as specified',
+        );
     });
 
     /* IMPORTANT NOTES */

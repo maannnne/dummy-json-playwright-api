@@ -55,8 +55,8 @@ test.describe('Get prodyct by category tests', () => {
         expect(response.responseJson.products.length, 'Products array should be empty').toBe(0);
 
         // Check total, skip and limit - should also be 0
-        expect(response.responseJson.limit, 'Limit should be 0').toBe(0);
-        expect(response.responseJson.skip, 'Skip should be 0').toBe(0);
-        expect(response.responseJson.total, 'Total should be 0').toBe(0);
+        expect(response.responseJson.limit, 'Response limit should be 0').toBe(0);
+        expect(response.responseJson.skip, 'Response skip should be 0').toBe(0);
+        expect(response.responseJson.total, 'Response total should be 0').toBe(0);
     });
 });

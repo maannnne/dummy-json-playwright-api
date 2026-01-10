@@ -59,7 +59,7 @@ test.describe('Get product by id tests', () => {
         const res = await productsApi.getProductById(invalidProductId);
 
         // Validate that the status code is 404
-        await baseValidator.validateStatusCode(res, 404);
+        await baseValidator.validateStatusCode(res, 404, 'Status code should be 404');
 
         // Validate the error message in the response body
         await baseValidator.validateKeyValuePair(

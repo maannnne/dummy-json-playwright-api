@@ -14,9 +14,11 @@ test.describe('Get product category list tests', () => {
         await baseValidator.validateStatusCode(response, 200, 'Status code should be 200');
 
         // Make sure the array of categories is not empty
-        expect(response.responseJson.length).toBeGreaterThanOrEqual(1);
+        expect(response.responseJson.length, 'Category list should not be empty').toBeGreaterThanOrEqual(1);
 
         // Validate the list contains a random expected category from expected categories list
-        expect(response.responseJson).toContain(randomExistingCategory);
+        expect(response.responseJson, 'Response should contain the expected category').toContain(
+            randomExistingCategory,
+        );
     });
 });
