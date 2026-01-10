@@ -31,16 +31,19 @@ test.describe('Get all products tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate the products is not an empty array
-        expect(res.responseJson.products.length).toBeGreaterThanOrEqual(1);
+        expect(res.responseJson.products.length, 'Products array should not be empty').toBeGreaterThanOrEqual(1);
 
-        // Validate the first product, check that response contains the all important keys (random subset of keys, but should be based on requirements)
-        await baseValidator.validateResponseKeys(res.responseJson.products[0], productKeysToValidate);
+        // Validate a random product, check that response contains the all important keys (random subset of keys, but should be based on requirements)
+        await baseValidator.validateResponseKeys(
+            res.responseJson.products[res.responseJson.products.length - 1],
+            productKeysToValidate,
+        );
 
         // Validate that skip is 0, since it was not specified
-        await baseValidator.validateKeyValuePair(res.responseJson, 'skip', 0);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'skip', 0, 'Response skip value should be 0');
 
         // Verify the limit is 30 by default, since it was not specified
-        await baseValidator.validateKeyValuePair(res.responseJson, 'limit', 30);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'limit', 30, 'Response limit value should be 30');
     });
 
     test('Get all products, set the limit to 0 and get all products displayed', async ({
@@ -57,8 +60,10 @@ test.describe('Get all products tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate that the limit is the same as total number of products and are not 0 (because we dont know exact number of all products, just making sure its not 0)
-        expect(res.responseJson.total).toBe(res.responseJson.limit);
-        expect(res.responseJson.total).toBeGreaterThan(0);
+        expect(res.responseJson.total, 'Total number is not 0').toBeGreaterThan(0);
+        expect(res.responseJson.total, 'Limit should be the same as the total number of products').toBe(
+            res.responseJson.limit,
+        );
     });
 
     test(`Get all products, set a random limit and get correct amount products displayed`, async ({
@@ -75,10 +80,15 @@ test.describe('Get all products tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate the limit, should be exactly as the specified number
-        await baseValidator.validateKeyValuePair(res.responseJson, 'limit', randomLimit);
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'limit',
+            randomLimit,
+            'Response limit value should be correct',
+        );
 
         // Additional check, make sure the response products contain the correct amount of products
-        expect(res.responseJson.products.length).toBe(randomLimit);
+        expect(res.responseJson.products.length, 'The response product count is correct').toBe(randomLimit);
     });
 
     test('Get all products, but skip the first random count of products', async ({ productsApi, baseValidator }) => {
@@ -92,7 +102,12 @@ test.describe('Get all products tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
         // Validate the skip, should be exactly as the specified number
-        await baseValidator.validateKeyValuePair(res.responseJson, 'skip', randomSkip);
+        await baseValidator.validateKeyValuePair(
+            res.responseJson,
+            'skip',
+            randomSkip,
+            'Response skip value should be correct',
+        );
 
         /* Since the products are displayed via their id, we can check that the products started with id randomSkip + 1,
     but it's a risky check without clear requirements, so I did not include it */
@@ -111,7 +126,10 @@ test.describe('Get all products tests', () => {
         // Check that the response contains all neccessary keys
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
-        // Validate the first element of the products array - should have only the specified key displayed + id
-        await baseValidator.validateResponseKeys(res.responseJson.products[0], ['id', randomSelect]);
+        // Validate a random element of the products array - should have only the specified key displayed + id
+        await baseValidator.validateResponseKeys(res.responseJson.products[res.responseJson.products.length - 1], [
+            'id',
+            randomSelect,
+        ]);
     });
 });

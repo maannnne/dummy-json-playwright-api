@@ -34,7 +34,7 @@ export class BaseValidator {
      */
     async validateResponseDoesntHaveKeys(resJson: object, keysToValidate: any[]): Promise<void> {
         keysToValidate.forEach(key => {
-            expect(resJson, `Response should contain key: ${key}`).not.toHaveProperty(key);
+            expect(resJson, `Response should not contain key: ${key}`).not.toHaveProperty(key);
         });
     }
 

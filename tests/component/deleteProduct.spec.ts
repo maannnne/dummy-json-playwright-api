@@ -23,10 +23,10 @@ test.describe('Delete product tests', () => {
         await baseValidator.validateResponseKeys(res.responseJson, keysToValidate);
 
         // Check the id is correct
-        await baseValidator.validateKeyValuePair(res.responseJson, 'id', productId);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'id', productId, 'Product id should be correct');
 
         // Check that isDeleted is true
-        await baseValidator.validateKeyValuePair(res.responseJson, 'isDeleted', true);
+        await baseValidator.validateKeyValuePair(res.responseJson, 'isDeleted', true, 'isDeleted should be true');
     });
 
     test('Negative case - Delete non-existing product and validate the response', async ({

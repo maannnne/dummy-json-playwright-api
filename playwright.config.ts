@@ -9,7 +9,7 @@ export default defineConfig({
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
     /* Reporter to use */
-    reporter: 'html',
+    reporter: [['html', { outputFolder: 'playwright-report', open: 'always' }]], // set to always open so that the report is visible after run
 
     /* Configure projects */
     projects: [
