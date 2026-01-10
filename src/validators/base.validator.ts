@@ -62,7 +62,7 @@ export class BaseValidator {
      * @param optionalValidationMessage - optional message to inlcude in the expect
      */
     async validateKeyValuePairsInObjectsArray(
-        objectsArray: object[],
+        objectsArray: Record<string, any>[],
         expectedKey: string,
         expectedValue: any,
         optionalValidationMessage?: string,

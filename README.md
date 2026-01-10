@@ -1,41 +1,30 @@
-
 # Playwright API Automation Framework
-
-  
 
 ## 📦 Installation & Running Tests
 
-  
+- Make sure you have the latest versions of node, typescript, npm and npx
 
 - Clone the repository and do `npm install`
+
+- Install Playwright test library `npm install -D @playwright/test`
+
+- Install Playwright with `npx playwright install`
 
 - After everything is installed, run `npx playwright test`
 
 - There is only 1 project that contains all the tests, so all tests will run
 
-  
-
 ---
 
-  
-
 ## 📊 Viewing Test Results
-
-  
 
 - The report is generated in /playwright-report folder,
 
 - As soon as you run the tests, the report will automatically open for your convenience
 
-  
-
 ---
 
-  
-
 ## 🧠 Design Decisions & Tradeoffs
-
-  
 
 **_Framework Design:_**
 The framework uses a Service Object Pattern (like POM for APIs) with ProductsApi encapsulating API logic and BaseValidator handling shared validations. Fixtures provide ready-to-use instances in tests, and custom DTOs ensure type-safe requests/responses (usually DTOs come from dev-generated libs, but I created myself for demo purposes). All tests can be found in tests folder.
