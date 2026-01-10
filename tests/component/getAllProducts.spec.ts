@@ -1,12 +1,12 @@
 import { expect } from '@playwright/test';
 import { test } from '../../src/fixtures/fixtures';
-import { ProductResponseDTO, ProductsListResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
+import { GetProductResponseDTO, ProductsListResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
 import { faker } from '@faker-js/faker';
 
 /* for validating the most important keys that should be visible in the json
 this is just random subset, this will depend on real requirements */
 // ------------ TEST DATA ------------
-const productKeysToValidate: (keyof ProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
+const productKeysToValidate: (keyof GetProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
 const allProductsKeysToValidate: (keyof ProductsListResponseDTO)[] = ['limit', 'products', 'skip', 'total'];
 const randomKeyFromKeysTovalidate =
     productKeysToValidate[faker.number.int({ min: 0, max: productKeysToValidate.length - 1 })];
@@ -53,7 +53,6 @@ test.describe('Get all products tests', () => {
         // Check the status code - should be 200OK
         await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
 
-
         // Check that the response contains all neccessary keys
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
@@ -71,7 +70,6 @@ test.describe('Get all products tests', () => {
 
         // Check the status code - should be 200OK
         await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
-
 
         // Check that the response contains all neccessary keys
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
@@ -109,7 +107,6 @@ test.describe('Get all products tests', () => {
 
         // Check the status code - should be 200OK
         await baseValidator.validateStatusCode(res, 200, 'Status code should be 200');
-
 
         // Check that the response contains all neccessary keys
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);

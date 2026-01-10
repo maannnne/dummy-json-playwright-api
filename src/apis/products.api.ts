@@ -1,6 +1,14 @@
 import { APIRequestContext, APIResponse } from '@playwright/test';
-import { IProductsQueryParams, IProductData } from '../interfaces-and-dtos/products.interface';
-import { ProductResponseDTO, ProductsListResponseDTO } from '../interfaces-and-dtos/products.dto';
+import { IProductsQueryParams } from '../interfaces-and-dtos/products.interface';
+import {
+    GetProductResponseDTO,
+    ProductsListResponseDTO,
+    CreateProductDTO,
+    UpdateProductDTO,
+    CreateProductResponseDTO,
+    UpdateProductResponseDTO,
+    DeleteProductResponseDTO,
+} from '../interfaces-and-dtos/products.dto';
 import { CategoryResponseDTO } from '../interfaces-and-dtos/categories.dto';
 import { ApiResponse } from '../interfaces-and-dtos/apiResponse.interface';
 
@@ -54,7 +62,7 @@ export class ProductsApi {
      * @param id string - id of the product,
      * @returns object containing status code, headers and response json
      */
-    async getProductById(id: number): Promise<ApiResponse<ProductResponseDTO>> {
+    async getProductById(id: number): Promise<ApiResponse<GetProductResponseDTO>> {
         // error handling with try catch
         try {
             const response = await this.request.get(`${this.productsEndpoint}/${id}`);
@@ -151,40 +159,75 @@ export class ProductsApi {
         }
     }
 
-    // TODO: add error handling staring here and use the custom response type
     /**
      *
-     * @param data IProductData - {title} | the json body for the request
+     * @param data CreateProductDTO - the json body for the request
      * @returns object containing status code, headers and response json
      */
-    async addNewProduct(data: IProductData): Promise<APIResponse> {
-        return await this.request.post(this.addProductEndpoint, {
-            data: data,
-        });
+    async addNewProduct(data: CreateProductDTO): Promise<ApiResponse<CreateProductResponseDTO>> {
+        // error handling with try catch
+        try {
+            const response = await this.request.post(this.addProductEndpoint, {
+                data: data,
+            });
+            return {
+                status: response.status(),
+                headers: response.headers(),
+                responseJson: await response.json(),
+            };
+        } catch (e) {
+            console.log(`Error adding product with data ${data}`, e);
+            throw new Error(`Error adding product with data ${data}`);
+        }
     }
 
     /**
      * Product update with PUT
      * @param productId string - id of the product you want to update
-     * @param data IProductData - {title} | the json body for the request
+     * @param data UpdateProductDTO - the json body for the request
      * @returns object containing status code, headers and response json
      */
-    async updateProduct(productId: number, data: IProductData): Promise<APIResponse> {
-        return await this.request.put(`${this.productsEndpoint}/${productId}`, {
-            data: data,
-        });
+    async updateProduct(productId: number, data: UpdateProductDTO): Promise<ApiResponse<UpdateProductResponseDTO>> {
+        // error handling with try catch
+        try {
+            const response = await this.request.put(`${this.productsEndpoint}/${productId}`, {
+                data: data,
+            });
+            return {
+                status: response.status(),
+                headers: response.headers(),
+                responseJson: await response.json(),
+            };
+        } catch (e) {
+            console.log(`Error updating product ${productId} with data ${data}`, e);
+            throw new Error(`Error updating product ${productId} with data ${data}`);
+        }
     }
 
     /**
      * Partial product update with PATCH
      * @param productId string - id of the product you want to update
-     * @param data IProductData - {title?} | the json body for the request
+     * @param data UpdateProductDTO - the json body for the request
      * @returns object containing status code, headers and response json
      */
-    async updateProductPartial(productId: number, data: IProductData): Promise<APIResponse> {
-        return await this.request.patch(`${this.productsEndpoint}/${productId}`, {
-            data: data,
-        });
+    async updateProductPartial(
+        productId: number,
+        data: UpdateProductDTO,
+    ): Promise<ApiResponse<UpdateProductResponseDTO>> {
+        // error handling with try catch
+        try {
+            const response = await this.request.patch(`${this.productsEndpoint}/${productId}`, {
+                data: data,
+            });
+            return {
+                status: response.status(),
+                headers: response.headers(),
+                responseJson: await response.json(),
+            };
+        } catch (e) {
+            console.log(`Error updating product ${productId} with data ${data}`, e);
+            throw new Error(`Error updating product ${productId} with data ${data}`);
+        }
     }
 
     /**
@@ -192,7 +235,18 @@ export class ProductsApi {
      * @param productId number - id of the product you want to delete
      * @returns object containing status code, headers and response json
      */
-    async deleteProduct(productId: number): Promise<APIResponse> {
-        return await this.request.delete(`${this.productsEndpoint}/${productId}`);
+    async deleteProduct(productId: number): Promise<ApiResponse<DeleteProductResponseDTO>> {
+        // error handling with try catch
+        try {
+            const response = await this.request.delete(`${this.productsEndpoint}/${productId}`);
+            return {
+                status: response.status(),
+                headers: response.headers(),
+                responseJson: await response.json(),
+            };
+        } catch (e) {
+            console.log(`Error deleting product with id ${productId}`, e);
+            throw new Error(`Error deleting product with id ${productId}`);
+        }
     }
 }

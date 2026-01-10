@@ -1,16 +1,16 @@
 import { test } from '../../src/fixtures/fixtures';
-import { ProductResponseDTO, ErrorResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
-import { APIValidationMessages as msgs } from '../../src/test-data/validationMessages';
+import { GetProductResponseDTO, ErrorResponseDTO } from '../../src/interfaces-and-dtos/products.dto';
+import { apiValidationMessages as msgs } from '../../src/test-data/validationMessages';
 import { faker } from '@faker-js/faker';
 
 // ------------ TEST DATA ------------
-const existingProductId = faker.number.int({ min: 1, max: 60 }); // in range of existing products
-const nonexistingProductId = faker.number.int({ min: 2000, max: 3000 }); // in range of non-existing products
+const existingProductId = faker.number.int({ min: 1, max: 60 }); // in range of existing mock products
+const nonexistingProductId = faker.number.int({ min: 2000, max: 3000 }); // out of range of existing mock products
 const invalidProductId = faker.number.int({ min: -1000, max: -1 }); // in range of invalid product ids
 
 /* for validating the most important keys that should be visible in the json
    this is just random subset, this will depend on real requirements */
-const keysToValidate: (keyof ProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
+const keysToValidate: (keyof GetProductResponseDTO)[] = ['id', 'title', 'description', 'category', 'price'];
 
 test.describe('Get product by id tests', () => {
     test('Get product by existing ID, check subset of keys and product id', async ({ productsApi, baseValidator }) => {
