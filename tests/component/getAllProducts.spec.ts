@@ -33,8 +33,11 @@ test.describe('Get all products tests', () => {
         // Validate the products is not an empty array
         expect(res.responseJson.products.length, 'Products array should not be empty').toBeGreaterThanOrEqual(1);
 
-        // Validate the first product, check that response contains the all important keys (random subset of keys, but should be based on requirements)
-        await baseValidator.validateResponseKeys(res.responseJson.products[0], productKeysToValidate);
+        // Validate a random product, check that response contains the all important keys (random subset of keys, but should be based on requirements)
+        await baseValidator.validateResponseKeys(
+            res.responseJson.products[res.responseJson.products.length - 1],
+            productKeysToValidate,
+        );
 
         // Validate that skip is 0, since it was not specified
         await baseValidator.validateKeyValuePair(res.responseJson, 'skip', 0, 'Response skip value should be 0');
@@ -123,7 +126,10 @@ test.describe('Get all products tests', () => {
         // Check that the response contains all neccessary keys
         await baseValidator.validateResponseKeys(res.responseJson, allProductsKeysToValidate);
 
-        // Validate the first element of the products array - should have only the specified key displayed + id
-        await baseValidator.validateResponseKeys(res.responseJson.products[0], ['id', randomSelect]);
+        // Validate a random element of the products array - should have only the specified key displayed + id
+        await baseValidator.validateResponseKeys(res.responseJson.products[res.responseJson.products.length - 1], [
+            'id',
+            randomSelect,
+        ]);
     });
 });

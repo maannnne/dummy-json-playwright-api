@@ -26,8 +26,11 @@ test.describe('Get prodyct by category tests', () => {
         // Validate the products is not an empty array
         expect(response.responseJson.products.length, 'Products array should not be empty').toBeGreaterThanOrEqual(1);
 
-        // Validate the first product, check that response contains the all important keys (random subset of keys, but should be based on requirements)
-        await baseValidator.validateResponseKeys(response.responseJson.products[0], productKeysToValidate);
+        // Validate a random product, check that response contains the all important keys (random subset of keys, but should be based on requirements)
+        await baseValidator.validateResponseKeys(
+            response.responseJson.products[response.responseJson.products.length - 1],
+            productKeysToValidate,
+        );
 
         // Validate the category is correct for all products
         await baseValidator.validateKeyValuePairsInObjectsArray(
