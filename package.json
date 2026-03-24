@@ -1,31 +1,38 @@
 {
-  "name": "dummy-json-playwright-api",
-  "version": "1.0.0",
-  "description": "A small framework that uses Playwright to automate DummyJSON APIs",
-  "main": "index.js",
-  "scripts": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/maannnne/dummy-json-playwright-api.git",
-    "link": "eslint ."
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/maannnne/dummy-json-playwright-api/issues"
-  },
-  "homepage": "https://github.com/maannnne/dummy-json-playwright-api#readme",
-  "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@playwright/test": "^1.57.0",
-    "@types/node": "^25.0.3",
-    "globals": "^17.0.0",
-    "jiti": "^2.6.1",
-    "prettier": "3.7.4"
-  },
-  "dependencies": {
-    "@faker-js/faker": "^10.2.0"
-  }
+    "name": "dummy-json-playwright-api",
+    "version": "1.0.0",
+    "description": "A small framework that uses Playwright to automate DummyJSON APIs",
+    "main": "index.js",
+    "scripts": {
+        "prepare": "husky"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/maannnne/dummy-json-playwright-api.git",
+        "link": "eslint ."
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "bugs": {
+        "url": "https://github.com/maannnne/dummy-json-playwright-api/issues"
+    },
+    "homepage": "https://github.com/maannnne/dummy-json-playwright-api#readme",
+    "lint-staged": {
+        "*.{ts,tsx,js,mjs,cjs,json,md,yml,yaml}": "prettier --write"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.39.2",
+        "@playwright/test": "^1.57.0",
+        "@types/node": "^25.0.3",
+        "globals": "^17.0.0",
+        "husky": "^9.1.7",
+        "jiti": "^2.6.1",
+        "lint-staged": "^16.4.0",
+        "prettier": "3.7.4"
+    },
+    "dependencies": {
+        "@faker-js/faker": "^10.2.0"
+    }
 }
